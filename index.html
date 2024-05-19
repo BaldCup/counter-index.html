@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Counter</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        input, #countdown, #workdays {
+            margin: 10px 0;
+            font-size: 1.5em;
+        }
+    </style>
+    <script>
+        function updateCounter() {
+            const targetDate = new Date(document.getElementById("target-date").value);
+            const now = new Date();
+            const diff = targetDate - now;
+            
+            const years =targetDate.getFullYear() - now.getFullYear();
+            const months =(targetDate.getMonth() - now.getMonth() + (12 * years)) % 12;
+            const days =Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours =Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes =Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds =Math.floor((diff % (1000 * 60)) / 1000);
+            const milliseconds = diff % 1000;
+
+            const realTimeDate = new Date();
+            document.getElementById("real-time").innerHTML = `Real Time: ${realTimeDate.toLocaleString()}<br>Milliseconds: ${realTimeDate.getMilliseconds()}`;
+            document.getElementById("countdown").innerHTML = `Years:${years} Months:${months} Days:${days} Hours:${hours} Minutes:${minutes} Seconds:${seconds} Milliseconds:${milliseconds}`;
+
+            let workdays = 0;
+            for (let d = new Date(now); d <= targetDate; d.setDate(d.getDate() + 1)) {
+                if (d.getDay() !== 0 && d.getDay() !== 6) {
+                    workdays++;
+                }
+            }
+            document.getElementById("workdays").innerHTML = `Work Days: ${workdays}`;
+
+            setTimeout(updateCounter, 10);
+        }
+        window.onload = function() {
+            document.getElementById("target-date").addEventListener("change", updateCounter);
+            updateCounter();
+        }
+    </script>
+</head>
+<body>
+    <input type="date" id="target-date">
+    <div id="real-time">Real Time: </div>
+    <div id="countdown">Years:0 Months:0 Days:0 Hours:0 Minutes:0 Seconds:0 Milliseconds:0</div>
+    <div id="workdays">Work Days:0</div>
+</body>
+</html>
